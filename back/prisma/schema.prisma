@@ -1,0 +1,46 @@
+/// Prisma schema for Paggo OCR Case
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String        @id @default(uuid())
+  email          String        @unique
+  passwordHash   String
+  createdAt      DateTime      @default(now())
+  documents      Document[]    @relation("UserDocuments")
+}
+
+model Document {
+  id             String        @id @default(uuid())
+  user           User          @relation("UserDocuments", fields: [userId], references: [id])
+  userId         String
+  originalName   String
+  filePath       String        // Path or URL to the uploaded image
+  uploadedAt     DateTime      @default(now())
+  extractedText  ExtractedText?
+  interactions   Interaction[] @relation("DocumentInteractions")
+}
+
+model ExtractedText {
+  id             String        @id @default(uuid())
+  document       Document      @relation(fields: [documentId], references: [id])
+  documentId     String        @unique
+  content        String        // Full text extracted by OCR
+  processedAt    DateTime      @default(now())
+}
+
+model Interaction {
+  id             String        @id @default(uuid())
+  document       Document      @relation("DocumentInteractions", fields: [documentId], references: [id])
+  documentId     String
+  role           String        // "user" or "assistant"
+  message        String        // User query or assistant response
+  timestamp      DateTime      @default(now())
+}

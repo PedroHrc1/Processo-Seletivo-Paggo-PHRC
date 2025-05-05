@@ -6,7 +6,6 @@ import { ValidationPipe } from '@nestjs/common';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // Habilita CORS para o front em localhost:3000 (ajuste se precisar)
   app.enableCors({ origin: 'http://localhost:3000', credentials: true });
 
   // Validação global de DTOs (strip de propriedades não declaradas)

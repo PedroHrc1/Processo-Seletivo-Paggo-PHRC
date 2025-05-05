@@ -1,14 +1,17 @@
 import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
+import { OcrService } from '../ocr/ocr.service';
 import { CreateDocumentDto } from './dto/create-document.dto';
 
 @Injectable()
 export class DocumentsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly ocrService: OcrService
+  ) {}
 
   /** Cria um novo documento */
   async createDocument(userId: string, dto: CreateDocumentDto) {
-
     const document = await this.prisma.document.create({
       data: {
         userId,
@@ -16,9 +19,26 @@ export class DocumentsService {
         filePath: dto.filePath,
       },
     });
-
+  
+    // Dispara OCR sem bloquear a resposta HTTP
+    this.ocrService
+      .extractText(dto.filePath)
+      .then((text) => {
+        return this.prisma.extractedText.create({
+          data: {
+            documentId: document.id,
+            content: text,
+          },
+        });
+      })
+      .catch((err) => {
+        // log de erro mas não interrompe a aplicação
+        console.error('Erro ao processar OCR:', err);
+      });
+  
     return document;
   }
+  
 
   /** Lista todos os documentos de um usuário */
   async findAll(userId: string) {

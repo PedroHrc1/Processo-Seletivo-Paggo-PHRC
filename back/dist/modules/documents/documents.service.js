@@ -12,9 +12,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.DocumentsService = void 0;
 const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../../prisma/prisma.service");
+const ocr_service_1 = require("../ocr/ocr.service");
 let DocumentsService = class DocumentsService {
-    constructor(prisma) {
+    constructor(prisma, ocrService) {
         this.prisma = prisma;
+        this.ocrService = ocrService;
     }
     /** Cria um novo documento */
     async createDocument(userId, dto) {
@@ -24,6 +26,21 @@ let DocumentsService = class DocumentsService {
                 originalName: dto.originalName,
                 filePath: dto.filePath,
             },
+        });
+        // Dispara OCR sem bloquear a resposta HTTP
+        this.ocrService
+            .extractText(dto.filePath)
+            .then((text) => {
+            return this.prisma.extractedText.create({
+                data: {
+                    documentId: document.id,
+                    content: text,
+                },
+            });
+        })
+            .catch((err) => {
+            // log de erro mas não interrompe a aplicação
+            console.error('Erro ao processar OCR:', err);
         });
         return document;
     }
@@ -61,6 +78,7 @@ let DocumentsService = class DocumentsService {
 exports.DocumentsService = DocumentsService;
 exports.DocumentsService = DocumentsService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [prisma_service_1.PrismaService])
+    __metadata("design:paramtypes", [prisma_service_1.PrismaService,
+        ocr_service_1.OcrService])
 ], DocumentsService);
 //# sourceMappingURL=documents.service.js.map

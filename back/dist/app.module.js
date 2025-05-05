@@ -7,10 +7,12 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppModule = void 0;
+// back/src/app.module.ts
 const common_1 = require("@nestjs/common");
 const prisma_module_1 = require("./prisma/prisma.module");
 const auth_module_1 = require("./modules/auth/auth.module");
 const documents_module_1 = require("./modules/documents/documents.module");
+const ocr_modules_1 = require("./modules/ocr/ocr.modules");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -20,7 +22,7 @@ exports.AppModule = AppModule = __decorate([
             prisma_module_1.PrismaModule,
             auth_module_1.AuthModule,
             documents_module_1.DocumentsModule,
-            // outros módulos...
+            ocr_modules_1.OcrModule,
         ],
     })
 ], AppModule);

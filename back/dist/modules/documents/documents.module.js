@@ -11,12 +11,13 @@ const common_1 = require("@nestjs/common");
 const documents_service_1 = require("./documents.service");
 const documents_controller_1 = require("./documents.controller");
 const prisma_module_1 = require("../../prisma/prisma.module");
+const ocr_modules_1 = require("../ocr/ocr.modules");
 let DocumentsModule = class DocumentsModule {
 };
 exports.DocumentsModule = DocumentsModule;
 exports.DocumentsModule = DocumentsModule = __decorate([
     (0, common_1.Module)({
-        imports: [prisma_module_1.PrismaModule],
+        imports: [prisma_module_1.PrismaModule, ocr_modules_1.OcrModule],
         controllers: [documents_controller_1.DocumentsController],
         providers: [documents_service_1.DocumentsService],
     })

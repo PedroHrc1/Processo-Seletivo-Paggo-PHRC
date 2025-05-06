@@ -1,34 +1,40 @@
 // backend/src/main.ts
+
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from '../src/app.module';
+import { NestExpressApplication } from '@nestjs/platform-express';
 import { ValidationPipe } from '@nestjs/common';
 import { join } from 'path';
-import { NestExpressApplication } from '@nestjs/platform-express';
+
+import { AppModule } from '../src/app.module';
 
 async function bootstrap() {
+  // 1) Cria a aplicação Nest usando o adaptador Express
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
-  // Serve arquivos estáticos de /uploads via /uploads/*
+  // 2) (Opcional) Se quiser prefixar todas as rotas com /api, descomente:
+  // app.setGlobalPrefix('api');
+
+  // 3) Habilita CORS globalmente para aceitar requisições do frontend
+  //    Use FRONTEND_URL no Vercel para apontar para o domínio do seu front em produção.
+  const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
+  app.enableCors({
+    origin: frontendUrl,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    credentials: true,
+  });
+
+  // 4) Serve arquivos estáticos da pasta uploads em /uploads/*
   app.useStaticAssets(join(__dirname, '..', 'uploads'), {
     prefix: '/uploads/',
   });
 
-  // Monta lista de origens permitidas
-  const allowedOrigins = [
-    'http://localhost:3000',                         // dev local
-    process.env.NEXT_PUBLIC_FRONTEND_URL || ''       // front deployado
-  ].filter(Boolean);
-
-  app.enableCors({
-    origin: allowedOrigins,
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    credentials: true,
-  });
-
+  // 5) Adiciona validação global com DTOs (whitelist: remove propriedades extra)
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
 
-  const PORT = parseInt(process.env.PORT) || 4000;
+  // 6) Inicia o servidor na porta configurada (padrão 4000)
+  const PORT = parseInt(process.env.PORT, 10) || 4000;
   await app.listen(PORT);
-  console.log(`🚀 API rodando na porta ${PORT}`);
+  console.log(`🚀 API rodando na porta ${PORT} (CORS permitido para ${frontendUrl})`);
 }
+
 bootstrap();

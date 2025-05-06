@@ -4,6 +4,9 @@ import { useEffect, useState, useContext } from 'react';
 import { useRouter } from 'next/router';
 import api from '../../services/api';
 import { AuthContext } from '../../context/AuthContext';
+import { Layout } from '../../components/Layout';
+import { Button } from '../../components/Button';
+
 
 type Interaction = {
   id: string;
@@ -117,6 +120,7 @@ export default function DocumentDetail() {
   }
 
   return (
+    <Layout>
     <div className="p-6">
       <h1 className="text-2xl mb-4">{doc.originalName}</h1>
 
@@ -150,15 +154,16 @@ export default function DocumentDetail() {
             placeholder="Digite sua pergunta..."
             disabled={loading}
           />
-          <button
+          <Button
             onClick={sendQuestion}
             disabled={loading}
             className="ml-2 px-4 py-2 bg-indigo-600 text-white rounded disabled:opacity-50"
           >
             {loading ? 'Enviando...' : 'Perguntar'}
-          </button>
+          </Button>
         </div>
       </section>
     </div>
+    </Layout>
   );
 }

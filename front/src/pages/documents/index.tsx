@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import api from '../../services/api';
+import { Layout } from '../../components/Layout';
 
 type Doc = {
   id: string;
@@ -27,6 +28,7 @@ export default function DocumentsList() {
   }, [router]);
 
   return (
+    <Layout>
     <div className="p-6">
       <h1 className="text-2xl mb-4">Meus Documentos</h1>
 
@@ -56,5 +58,6 @@ export default function DocumentsList() {
         </ul>
       )}
     </div>
+    </Layout>
   );
 }

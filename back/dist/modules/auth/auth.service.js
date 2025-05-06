@@ -52,6 +52,26 @@ let AuthService = class AuthService {
         this.prisma = prisma;
         this.jwtService = jwtService;
     }
+    async register(dto) {
+        // 1) verifica duplicidade
+        const exists = await this.prisma.user.findUnique({ where: { email: dto.email } });
+        if (exists) {
+            throw new common_1.ConflictException('E-mail já cadastrado');
+        }
+        // 2) hash da senha
+        const hash = await bcrypt.hash(dto.password, 10);
+        // 3) cria usuário
+        const user = await this.prisma.user.create({
+            data: {
+                name: dto.name,
+                email: dto.email,
+                passwordHash: hash,
+            },
+        });
+        // 4) remova hash antes de retornar
+        delete user.passwordHash;
+        return user;
+    }
     /** Verifica credenciais e retorna o usuário se válido */
     async validateUser(email, pass) {
         const user = await this.prisma.user.findUnique({ where: { email } });

@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import api from '../services/api';
 import { useRouter } from 'next/router';
+import { Layout } from '../components/Layout';
+import { Button } from '../components/Button';
+
 
 export default function UploadPage() {
   const [file, setFile] = useState<File | null>(null);
@@ -31,6 +34,7 @@ export default function UploadPage() {
   }
 
   return (
+    <Layout>
     <div className="p-6">
       <h1 className="text-2xl mb-4">Enviar Fatura</h1>
       <input
@@ -42,13 +46,14 @@ export default function UploadPage() {
         }}
       />
       {error && <p className="text-red-600 mt-2">{error}</p>}
-      <button
+      <Button
         onClick={handleUpload}
         disabled={loading}
         className="ml-2 px-4 py-2 bg-green-600 text-white rounded disabled:opacity-50"
       >
         {loading ? 'Enviando...' : 'Enviar'}
-      </button>
+      </Button>
     </div>
+    </Layout>
   );
 }

@@ -2,9 +2,7 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/upload": "pages/upload.js",
-  "/documents/[id]": "pages/documents/[id].js",
-  "/login": "pages/login.js",
   "/documents": "pages/documents.js",
-  "/signup": "pages/signup.js"
+  "/login": "pages/login.js",
+  "/documents/[id]": "pages/documents/[id].js"
 }

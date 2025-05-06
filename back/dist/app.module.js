@@ -13,6 +13,7 @@ const prisma_module_1 = require("./prisma/prisma.module");
 const auth_module_1 = require("./modules/auth/auth.module");
 const documents_module_1 = require("./modules/documents/documents.module");
 const ocr_modules_1 = require("./modules/ocr/ocr.modules");
+const chat_module_1 = require("./modules/chat/chat.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -23,6 +24,7 @@ exports.AppModule = AppModule = __decorate([
             auth_module_1.AuthModule,
             documents_module_1.DocumentsModule,
             ocr_modules_1.OcrModule,
+            chat_module_1.ChatModule
         ],
     })
 ], AppModule);

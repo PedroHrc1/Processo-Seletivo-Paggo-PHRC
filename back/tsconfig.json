@@ -1,20 +1,36 @@
+// back/tsconfig.json
 {
-    "compilerOptions": {
-      "module": "commonjs",
-      "target": "es2020",
-      "lib": ["es2020"],
-      "outDir": "./dist",
-      "rootDir": "./src",
-      "strict": true,
-      "esModuleInterop": true,
-      "moduleResolution": "node",
-      "resolveJsonModule": true,
-      "skipLibCheck": true,
-      "emitDecoratorMetadata": true,
-      "experimentalDecorators": true,
-      "sourceMap": true
-    },
-    "include": ["src/**/*"],
-    "exclude": ["node_modules", "dist", "uploads"]
-  }
-  
+  "compilerOptions": {
+    /* Target modern JS for Node */
+    "target": "ES2020",
+    /* Use CommonJS modules */
+    "module": "CommonJS",
+    /* Emit decorator metadata for Nest */
+    "emitDecoratorMetadata": true,
+    /* Enable experimental decorators */
+    "experimentalDecorators": true,
+    /* Source maps for debugging */
+    "sourceMap": true,
+    /* Output directory */
+    "outDir": "./dist",
+    /* Strict type-checking options */
+    "strict": true,
+    "strictNullChecks": true,
+    "strictPropertyInitialization": false,
+    /* Allow default imports from CommonJS modules */
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    /* Skip type-checking of all declaration files */
+    "skipLibCheck": true,
+    /* Where to look for type declarations */
+    "typeRoots": ["./node_modules/@types", "./src/types"],
+    /* Resolve JSON imports if needed */
+    "resolveJsonModule": true,
+    /* Allow synthetic default imports */
+    "allowSyntheticDefaultImports": true,
+    /* Enable incremental compilations */
+    "incremental": true
+  },
+  "include": ["src/**/*.ts", "src/types/**/*.d.ts"],
+  "exclude": ["node_modules", "dist"]
+}

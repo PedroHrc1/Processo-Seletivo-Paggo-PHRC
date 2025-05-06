@@ -1,3 +1,4 @@
+// backend/src/main.ts
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from '../src/app.module';
 import { ValidationPipe } from '@nestjs/common';
@@ -12,11 +13,22 @@ async function bootstrap() {
     prefix: '/uploads/',
   });
 
-  app.enableCors({ origin: 'http://localhost:3000', credentials: true });
+  // Monta lista de origens permitidas
+  const allowedOrigins = [
+    'http://localhost:3000',                         // dev local
+    process.env.NEXT_PUBLIC_FRONTEND_URL || ''       // front deployado
+  ].filter(Boolean);
+
+  app.enableCors({
+    origin: allowedOrigins,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true,
+  });
+
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
 
   const PORT = parseInt(process.env.PORT) || 4000;
   await app.listen(PORT);
-  console.log(`🚀 API rodando em http://localhost:${PORT}`);
+  console.log(`🚀 API rodando na porta ${PORT}`);
 }
 bootstrap();
